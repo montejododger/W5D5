@@ -48,6 +48,13 @@ def biggest_cast
   # Find the id and title of the 3 movies with the largest casts (i.e., most
   # actors).
   
+  Movie
+    .select(:id, :title)
+    .joins(:actors)
+    .group(:id)
+    .order('COUNT(movies.id) DESC')
+    .limit(3)
+
 end
 
 def directed_by_one_of(them)
@@ -65,6 +72,11 @@ def directed_by_one_of(them)
   
   # Note: Directors appear in the 'actors' table.
 
+  Movie
+    .select(:id, :title)
+    .joins(:director)
+    .where("name IN (?)", them)
+
 end
 
 def movie_names_before_1940
@@ -79,4 +91,8 @@ def movie_names_before_1940
   #
   # Use pluck to find the title of all movies made before 1940.
 
+  Movie
+    # .select(:title)
+    .where('yr < 1940')
+    .pluck(:title)
 end
